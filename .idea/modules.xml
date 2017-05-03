@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/jvm-data-viz-core/jvm-data-viz-core.iml" filepath="$PROJECT_DIR$/jvm-data-viz-core/jvm-data-viz-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jvm-data-viz-parent.iml" filepath="$PROJECT_DIR$/jvm-data-viz-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jvm-data-viz-reactjs/jvm-data-viz-reactjs.iml" filepath="$PROJECT_DIR$/jvm-data-viz-reactjs/jvm-data-viz-reactjs.iml" />
+    </modules>
+  </component>
+</project>
