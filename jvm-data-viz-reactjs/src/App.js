@@ -1,51 +1,86 @@
 import React, {Component} from 'react';
 import './App.css';
 
+import VisualizationServer from './server/VisualizationServer';
+
 import {
     XYPlot,
     XAxis,
     YAxis,
     LineSeries,
     HorizontalGridLines,
+    VerticalGridLines,
+    VerticalBarSeries,
     RadialChart
 } from 'react-vis';
 
 import 'react-vis/dist/styles/radial-chart.scss';
 import 'react-vis/dist/style.css';
 
+
+
 class App extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            plotData: [
+                {x: 1, y: 10},
+                {x: 2, y: 5},
+                {x: 3, y: 15},
+                {x: 6, y: 18}
+            ]
+        };
+
+        this.server = new VisualizationServer({onData: this.onData.bind(this)});
+        this.server.connect();
+    }
+
     render() {
+        const barData = [
+            {x: 'A', y: 10},
+            {x: 'B', y: 5},
+            {x: 'C', y: 15}
+        ];
+
         return (
             <div>
-                <RadialChart
-                    innerRadius={100}
-                    radius={140}
-                    data={[
-                        {angle: 1},
-                        {angle: 10},
-                        {angle: 10},
-                        {angle: 10},
-                        {angle: 10}
-                    ]}
-                    width={300}
-                    height={300}
-                />
                 <XYPlot
                     width={300}
                     height={300}>
+                    <VerticalGridLines />
                     <HorizontalGridLines />
                     <LineSeries
                         color="red"
-                        data={[
-                            {x: 1, y: 10},
-                            {x: 2, y: 5},
-                            {x: 3, y: 15}
-                        ]}/>
-                    <XAxis title="X" />
-                    <YAxis />
+                        data={this.state.plotData}
+                    />
+
+                    <XAxis title="X"/>
+                    <YAxis title="Y"/>
+
+                    {/*<VerticalBarSeries data={[*/}
+                    {/*{x: 'A', y: 10},*/}
+                    {/*{x: 'B', y: 5},*/}
+                    {/*{x: 'C', y: 15}*/}
+                    {/*]}/>*/}
                 </XYPlot>
+
+
             </div>
         );
+    }
+
+    onData(data) {
+        if (! data) {
+            return;
+        }
+
+        console.log("got data", data.data);
+        const plotData = data.data.map((d, idx) => {
+            return {x: idx, y: d}
+        });
+
+        this.setState({plotData});
     }
 }
 
