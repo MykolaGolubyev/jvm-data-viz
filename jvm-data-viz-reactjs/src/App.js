@@ -3,72 +3,57 @@ import './App.css';
 
 import VisualizationServer from './server/VisualizationServer';
 
-import Symbol from 'es6-symbol';
-global.Symbol = Symbol;
+import {
+    VictoryChart,
+    VictoryBar,
+    VictoryLine,
+    VictoryScatter
+} from 'victory'
 
-// import {
-//     XYPlot,
-//     XAxis,
-//     YAxis,
-//     LineSeries,
-//     HorizontalGridLines,
-//     VerticalGridLines,
-//     VerticalBarSeries,
-//     RadialChart
-// } from 'react-vis';
-//
-import 'react-vis/dist/styles/radial-chart.scss';
-import 'react-vis/dist/style.css';
+class DataListeners {
+    constructor() {
+        this.listeners = [];
+    }
 
+    addListener(l) {
+        this.listeners.push(l)
+    }
+
+    registerNewData(data) {
+        this.listeners.forEach(l => l(data))
+    }
+}
+
+const dataListeners = new DataListeners();
 
 class App extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            plotData: [
-                {x: 1, y: 10},
-                {x: 2, y: 5},
-                {x: 3, y: 15},
-                {x: 6, y: 18}
-            ]
-        };
+        const data = [[40, 20], [30, 15], [50, 22]];
+        this.state = {data};
+
+        dataListeners.addListener(this.dataListener)
 
         // this.server = new VisualizationServer({onData: this.onData.bind(this)});
         // this.server.connect();
     }
 
+    dataListener = (data) => {
+        const rand = () => Math.random() * 30 - 15;
+        this.setState({data: [[rand(), rand()], [rand(), rand()], [rand(), rand()]]})
+    };
+
     render() {
-        const barData = [
-            {x: 'A', y: 10},
-            {x: 'B', y: 5},
-            {x: 'C', y: 15}
-        ];
+        const {data} = this.state;
 
         return (
-            <div>
+            <div style={{width: 700, height: 400}}>
                 <div>Hello</div>
-                {/*<XYPlot*/}
-                    {/*width={300}*/}
-                    {/*height={300}>*/}
-                    {/*<VerticalGridLines />*/}
-                    {/*<HorizontalGridLines />*/}
-                    {/*<LineSeries*/}
-                        {/*color="red"*/}
-                        {/*data={this.state.plotData}*/}
-                    {/*/>*/}
-
-                    {/*<XAxis title="X"/>*/}
-                    {/*<YAxis title="Y"/>*/}
-
-                    {/*/!*<VerticalBarSeries data={[*!/*/}
-                    {/*/!*{x: 'A', y: 10},*!/*/}
-                    {/*/!*{x: 'B', y: 5},*!/*/}
-                    {/*/!*{x: 'C', y: 15}*!/*/}
-                    {/*/!*]}/>*!/*/}
-                {/*</XYPlot>*/}
-
-
+                <VictoryChart>
+                    <VictoryLine data={data} x={0} y={1}/>
+                    <VictoryScatter data={data} x={0} y={1}/>
+                </VictoryChart>
             </div>
         );
     }
@@ -86,5 +71,9 @@ class App extends Component {
         this.setState({plotData});
     }
 }
+
+global.testDirection = () => {
+    dataListeners.registerNewData({})
+};
 
 export default App;
